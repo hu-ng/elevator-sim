@@ -3,6 +3,9 @@ import random
 
 # Building a class for the elevator
 class Elevator():
+    """
+    Elevator class, main driver of the simulation
+    """
     def __init__(self, capacity=20, current_floor=0, next_floor=1):
         self.capacity = capacity  # max capacity
         self.load = 0  # current load
@@ -16,9 +19,11 @@ class Elevator():
         self.direction = True  # true for up, false for down
 
 
-    # termination definition
+    # Termination definition
     def done(self):
-        """end the ride when all request and destination floors are reached"""
+        """
+        End the ride when all request and destination floors are reached
+        """
         if len(self.requests) == 0 and len(self.destinations) == 0:
             # print("All the passengers have successfully been dropped at their destinations after " + str(self.steps) + " steps." )
             # print("The average time spent in dropping each rider is " + str(self.return_wait_time_avg()) + " seconds in computer time.")
@@ -29,7 +34,9 @@ class Elevator():
 
 
     def filled(self):
-        """check whether the number of passengers has reached the elevator capacity"""
+        """
+        Check whether the number of passengers has reached the elevator capacity
+        """
         if self.load == self.capacity:
             return True
         else:
@@ -37,13 +44,17 @@ class Elevator():
 
 
     def add_request(self, floor):
-        """Add requests to elevator. Only accept unique requests"""
+        """
+        Add requests to elevator. Only accept unique requests
+        """
         if floor not in self.requests:
             self.requests.append(floor)
 
 
     def load_passengers(self, passengers):
-        """Take passengers in until the elevator is full, and update requests list accordingly"""
+        """
+        Take passengers in until the elevator is full, and update requests list accordingly
+        """
         added = 0
         for person in passengers:
             if self.filled():
@@ -55,12 +66,12 @@ class Elevator():
             self.passengers.append(person)
             self.load += 1
             added += 1
-        # remove a floor from the requrests list if the elevator has reached it
+        # Remove a floor from the requrests list if the elevator has reached it
         if self.current_floor in self.requests:
-            # if all passengers on the floor enter elevator, remove floor
+            # If all passengers on the floor enter elevator, remove floor
             if added == len(passengers):
                 self.requests.remove(self.current_floor)
-            # if not all enter (which means elevator is full), add a new request for the same floor to the end of list
+            # If not all enter (which means elevator is full), add a new request for the same floor to the end of list
             else:
                 self.requests.append(self.requests.pop(0))
         # if added != 0:
@@ -69,7 +80,9 @@ class Elevator():
 
 
     def unload_passengers(self):
-        """Unload passengers when they reach their destination"""
+        """
+        Unload passengers when they reach their destination
+        """
 
         # Remove current floor from destination only if it is in destination
         if self.current_floor in self.destinations:
@@ -91,7 +104,10 @@ class Elevator():
     # All strategies are based in terms of choosing the next floor to go to
 
     def next_floor_sequential(self):
-        """Strategy 1: Take care of the destinations first before going to the requests"""
+        """
+        Strategy 1: Take care of the destinations first before going to the requests
+        """
+
         if len(self.destinations) != 0:
             self.next_floor = self.destinations[0]
         elif len(self.requests) != 0:
@@ -99,7 +115,10 @@ class Elevator():
 
 
     def next_floor_simple(self, building):
-        """# Strategy 2: Going all the way up and down"""
+        """
+        Strategy 2: Going all the way up and down
+        """
+
         if self.current_floor == 1:
             self.direction = True
         elif self.current_floor == len(building.floors):
@@ -112,7 +131,10 @@ class Elevator():
 
 
     def elevator_algorithm(self, building):
-        """Strategy 3: Going up only when someone in the elevator wants to go up or there is a request on upper floors, then switch directions"""
+        """
+        Strategy 3: Going up only when someone in the elevator wants to go up or there is a request on upper floors, then switch directions
+        """
+
         if not self.filled():
             # If going up, change direction when no one in the elevator wants to go up and there is no request up
             if self.direction:
@@ -188,7 +210,9 @@ class Passenger():
 
 
     def calc_wait_time(self):
-        "Calculate time waited. Used in conjunction with Elevator.unload_passenger()"
+        """
+        Calculate time waited. Used in conjunction with Elevator.unload_passenger()
+        """
         self.time_waited = time() - self.wait_start
         return self.time_waited
 
@@ -228,6 +252,9 @@ import matplotlib.pyplot as plt
 # Functions to simulate a strategy multiple times
 
 def run_simulation1(number_of_floors, number_of_people, trials):
+    """
+    Use the first strategy
+    """
     trial_steps, trial_waittimes = [], []
     for i in range(0, trials):
         # Setting up objects
@@ -258,6 +285,9 @@ def run_simulation1(number_of_floors, number_of_people, trials):
 
 
 def run_simulation2(number_of_floors, number_of_people, trials):
+    """
+    Use the second strategy
+    """
     trial_steps, trial_waittimes = [], []
     for i in range(0, trials):
         # Setting up objects
@@ -285,6 +315,9 @@ def run_simulation2(number_of_floors, number_of_people, trials):
 
 
 def run_simulation3(number_of_floors, number_of_people, trials):
+    """
+    Use the third strategy
+    """
     trial_steps, trial_waittimes = [], []
     for i in range(0, trials):
         # Setting up objects
